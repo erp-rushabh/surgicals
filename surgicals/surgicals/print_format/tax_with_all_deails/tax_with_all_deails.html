@@ -1,0 +1,256 @@
+<!-- Main container -->
+<div style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4;">
+  <div style="border: 2px solid black; padding: 0;">
+
+    <div style="padding: 5px;">
+
+      <!-- Header Title -->
+      <div style="text-align: center; font-weight: bold; font-size: 14px;">
+        TAX INVOICE
+        <div style="height: 1px; background-color: black; margin: 3px -5px;"></div>
+        ASHVIN SURGICAL
+      </div>
+
+      <!-- Header address and contact -->
+      <div style="text-align: center; margin-top: 3px;">
+        205, M.K.COMPLEX, HIRABAUG CIRCLE, VARACHHA ROAD, SURAT - 395006, GUJARAT
+        <div style="display: flex; justify-content: center; margin-top: 3px; gap: 12px;">
+          <span>PH. +91**********</span>
+          <span>Email: ash**********@yahoo.in</span>
+          <span>Drug Lic.No. 20B 108521,21B 108522</span>
+        </div>
+      </div>
+
+      <!-- Line break -->
+      <div style="height: 1px; background-color: black; margin: 5px -5px;"></div>
+
+      <!-- Invoice info row -->
+      <div style="display: flex; justify-content: space-between;">
+        <div>CHALLAN NO. <strong>{{ doc.name }}</strong></div>
+        <div>
+          DATE:
+          <strong>{{ frappe.utils.formatdate(doc.posting_date, "d-MMM-YYYY").lstrip("0") | upper }}</strong>
+        </div>
+      </div>
+
+      <!-- Separator -->
+      <div style="height: 1px; background-color: black; margin: 5px -5px;"></div>
+
+      <!-- Customer details -->
+      <div style="margin-top: 5px; display: flex;">
+        TO,<br>
+        <strong>
+          <div style="margin-left: 20px;">{{ doc.customer_name or doc.customer }}</div>
+          <div style="margin-left: 20px;">{{ doc.shipping_address or doc.customer_address or "" }}</div>
+        </strong>
+      </div>
+
+    </div>
+
+<!-- Remove background color from table headers -->
+<style>
+  .print-format th{
+      background-color: transparent !important;
+  }
+</style>
+
+<!-- ITEM TABLE START -->
+<table style="width: 100%; border-collapse: collapse; border-top: 1px solid black; border-bottom: 1px solid black; font-size: 12px; margin: 0;">
+  <thead>
+    <tr style="border-bottom: 1px solid black;">
+
+      <!-- SR NO -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 5%;">SR.</th>
+
+      <!-- Particulars -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 40%;">PARTICULARS</th>
+
+      <!-- HSN -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 8%;">HSN</th>
+
+      <!-- QTY -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 8%;">QTY</th>
+
+      <!-- RATE -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 10%;">RATE</th>
+
+      <!-- GST% -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 8%;">GST%</th>
+
+      <!-- SGST% -->
+      <th style="border-right: 1px solid black; padding: 3px; text-align: center; width: 8%;">SGST%</th>
+
+      <!-- AMOUNT -->
+      <th style="padding: 3px; text-align: center; width: 13%;">AMOUNT (Rs.)</th>
+
+      <!-- For IGST if shipping outside state (remove comment if needed)
+      <th style="padding: 3px; text-align: center; width: 8%;">IGST%</th>
+      -->
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <!-- Loop through items -->
+    {% for item in doc.items %}
+    <tr>
+
+      <!-- Serial -->
+      <td style="border-right: 1px solid black; padding: 3px; text-align: center;">{{ loop.index }}</td>
+
+      <!-- Item name -->
+      <td style="border-right: 1px solid black; padding: 3px;">
+        {{ item.item_name }}
+        {% if item.description and item.description != item.item_name %}
+          <br>{{ item.description }}
+        {% endif %}
+      </td>
+
+      <!-- HSN -->
+      <td style="border-right: 1px solid black; padding: 3px; text-align: center;">
+        {{ item.hsn_code or "" }}
+      </td>
+
+      <!-- Quantity -->
+      <td style="border-right: 1px solid black; padding: 3px; text-align: center;">
+        {{ "%g"|format(item.qty) }}
+      </td>
+
+      <!-- Rate -->
+      <td style="border-right: 1px solid black; padding: 3px; text-align: right;">
+        {{ "%.2f"|format(item.rate) }}
+      </td>
+
+      <!-- GST -->
+      <td style="border-right: 1px solid black; padding: 3px; text-align: center;">
+        {{ item.gst_rate or 0 }}%
+      </td>
+
+      <!-- SGST -->
+      <td style="border-right: 1px solid black; padding: 3px; text-align: center;">
+        {{ item.sgst_rate or 0 }}%
+      </td>
+
+      <!-- Amount -->
+      <td style="padding: 3px; text-align: right;">
+        {{ "%.2f"|format(item.amount) }}
+      </td>
+
+    </tr>
+    {% endfor %}
+
+    <!-- Minimum blank rows -->
+    {% set min_rows = 10 %}
+    {% if doc.items|length < min_rows %}
+      {% for i in range(min_rows - doc.items|length) %}
+      <tr>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="border-right: 1px solid black; padding: 6px;">&nbsp;</td>
+        <td style="padding: 6px;">&nbsp;</td>
+
+        
+      </tr>
+      {% endfor %}
+    {% endif %}
+
+    <!-- <tr>
+ 
+  </tr> -->
+
+  </tbody>
+
+  
+
+  <!-- Footer total -->
+  <tfoot style="border-top: 1px solid black;">
+    <tr style="font-weight: bold;">
+      <td colspan="4" style="border-right: 1px solid black; padding: 3px; text-align: right;"></td>
+      <td style="border-right: 1px solid black;"></td>
+      <td style="border-right: 1px solid black;"></td>
+      <td style="border-right: 1px solid black;"></td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total) }}</td>
+
+      <tr style="border-top: 1px solid black;">
+      <td colspan="4" style="border-right: 1px solid black;     border-bottom: 1px solid transparent;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" >LESS DISCOUNT</td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total_qty) }}</td>
+        </tr>
+        <tr style="border-top: 1px solid black;">
+      <td colspan="4" style="border-right: 1px solid black; border-bottom: 1px solid transparent;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" >AFTER DISCOUNT TOTAL</td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total) }}</td>
+        </tr>
+        <tr style="border-top: 1px solid black;">
+      <td colspan="4" style="border-bottom: 1px solid transparent; border-right: 1px solid black;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" >SGST2.5 %</td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total) }}</td>
+        </tr>
+       <tr style="border-top: 1px solid black;">
+      <td colspan="4" style=" border-bottom: 1px solid transparent;border-right: 1px solid black;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" >CGST 2.5%</td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total) }}</td>
+        </tr>
+        <tr style="border-top: 1px solid black;">
+      <td colspan="4" style="border-bottom: 1px solid transparent; border-right: 1px solid black;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" >ROUNDED OF</td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total) }}</td>
+        </tr>
+        <tr style="border-top: 1px solid black;">
+      <td colspan="4" style="border-right: 1px solid black;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" >ROUNDED OF</td>
+      <td style="padding: 3px; text-align: right;">{{ "%.2f"|format(doc.total) }}</td>
+        </tr>
+        <tr style="border-top: 1px solid black;">
+      <td colspan="4" style="border-right: 1px solid black;"></td>
+      <td  colspan="3" style="border-right: 1px solid black; padding: 3px; text-align: right;" ><strong>INVOICE AMOUT (Rs.)</strong> </td>
+      <td style="padding: 3px; text-align: right;">
+        <strong>{{ "%.2f"|format(doc.total) }}</strong></td>
+        </tr>
+
+        <!-- banck details -->
+
+         <td colspan="5" style="border-top:1px solid; border-right: 1px solid black; padding: 3px; text-align: left;">
+
+            <strong>BANK DETAILS</strong><br>
+            <div><strong>A/C NAME:</strong> {{ doc.company }}</div>
+            <div><strong>BANK NAME:</strong> {{ doc.bank_account or "" }}</div>
+            <div><strong>A/C NO:</strong> {{ doc.bank_account_no or "" }}</div>
+            <div><strong>IFSC CODE:</strong> {{ doc.ifsc_code or "" }}</div>
+
+        </td>
+        <!-- signamture -->
+        <td  colspan="4" style="border-top:1px solid; padding: 3px; text-align: center;">
+        <div style="display: flex; justify-content: space-between; ">
+            <div style="text-align: center;">
+            <div>FOR ASHVIN SURGICAL</div>
+            <div style="margin-top: 40px;">AUTHORISED SIGNATORY</div>
+        </div>
+  </div>
+
+        </td> 
+
+           
+        
+    </tr>
+
+    
+  </tfoot>
+</table>
+
+<!-- Footer signature -->
+<div style="padding: 5px;">
+
+
+  <div style="margin-top: 15px; text-align: center;">
+    <div>SUBJECT TO SURAT JURISDICTION</div>
+    <div>THIS IS A COMPUTER GENERATED CHALLAN</div>
+  </div>
+</div>
+
+  </div>
+</div>

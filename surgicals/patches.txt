@@ -4,3 +4,7 @@
 
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
+
+surgicals.patches.add_specifications_table_to_item #2025-11-03
+surgicals.patches.add_item_specifications_to_delivery_note #2025-11-03
+surgicals.patches.add_item_specifications_to_sales_invoice #2025-11-03

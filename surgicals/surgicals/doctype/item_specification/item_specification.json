@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-02 11:31:03.503361",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rayone",
+  "power",
+  "serial_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "rayone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Rayone"
+  },
+  {
+   "fieldname": "power",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Power"
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SN No."
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-02 11:35:17.785174",
+ "modified_by": "Administrator",
+ "module": "Surgicals",
+ "name": "Item Specification",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
