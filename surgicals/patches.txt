@@ -8,3 +8,5 @@
 surgicals.patches.add_specifications_table_to_item #2025-11-03
 surgicals.patches.add_item_specifications_to_delivery_note #2025-11-03
 surgicals.patches.add_item_specifications_to_sales_invoice #2025-11-03
+
+surgicals.patches.remove_sales_invoice_mandatory #2025-11-03 5

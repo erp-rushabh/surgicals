@@ -5,6 +5,14 @@ app_description = "For General use for Surgicals"
 app_email = "tirthan703@gmail.com"
 app_license = "mit"
 
+# hooks.py
+doc_events = {
+   "Sales Invoice": {
+        "before_save": "surgicals.overrides.ignore_sales_invoice_mandatory"
+    }
+}
+
+
 # Apps
 # ------------------
 
