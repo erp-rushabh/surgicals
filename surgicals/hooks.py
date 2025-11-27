@@ -5,7 +5,7 @@ app_description = "For General use for Surgicals"
 app_email = "tirthan703@gmail.com"
 app_license = "mit"
 
-# og folder
+# og folder 1
 
 # hooks.py
 doc_events = {
