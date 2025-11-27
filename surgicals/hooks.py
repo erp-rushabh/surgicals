@@ -5,6 +5,8 @@ app_description = "For General use for Surgicals"
 app_email = "tirthan703@gmail.com"
 app_license = "mit"
 
+# og
+
 # hooks.py
 doc_events = {
    "Sales Invoice": {
