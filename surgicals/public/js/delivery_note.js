@@ -1,4 +1,4 @@
-frappe.ui.form.on('Sales Invoice', {
+frappe.ui.form.on('Delivery Note', {
 
     scan_barcode: function(frm) {
         const barcode = frm.doc.scan_barcode;

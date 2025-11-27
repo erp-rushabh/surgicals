@@ -1,4 +1,16 @@
-frappe.ui.form.on('Sales Invoice', {
+frappe.ui.form.on('Sales Order', {
+    
+    delivery_date: function(frm) {
+        let delivery_date = frm.doc.delivery_date;
+
+        if (!frm.doc.items) return;
+
+        frm.doc.items.forEach(row => {
+            frappe.model.set_value(row.doctype, row.name, 'delivery_date', delivery_date);
+        });
+
+        frm.refresh_field('items');
+    },
 
     scan_barcode: function(frm) {
         const barcode = frm.doc.scan_barcode;
@@ -7,7 +19,7 @@ frappe.ui.form.on('Sales Invoice', {
         frm.set_value('tax_category', 'In-State');
 
         frappe.call({
-            method: 'surgicals.api.get_serial_expiry_from_barcode_nom',
+            method: 'surgicals.api.get_serial_expiry_from_barcode',
             args: { barcode: barcode },
             callback: function(r) {
                 if (!r.message) {
@@ -33,6 +45,7 @@ frappe.ui.form.on('Sales Invoice', {
 
                 if (existing_row) {
                     frappe.model.set_value(existing_row.doctype, existing_row.name, 'qty', existing_row.qty + 1);
+                    frappe.model.set_value(existing_row.doctype, existing_row.name, 'delivery_date', frm.doc.delivery_date);
                 }
 
                 else if (items.length === 1 && !items[0].item_code) {
@@ -41,17 +54,20 @@ frappe.ui.form.on('Sales Invoice', {
                     frappe.model.set_value(row.doctype, row.name, 'item_code', item_code);
                     frappe.model.set_value(row.doctype, row.name, 'item_name', item_name);
                     frappe.model.set_value(row.doctype, row.name, 'uom', uom);
-                    frappe.model.set_value(row.doctype, row.name, 'serial_nom', serial_no);
+                    frappe.model.set_value(row.doctype, row.name, 'serial_no', serial_no);
                     frappe.model.set_value(row.doctype, row.name, 'expiry_date', expiry_date);
-                    frappe.model.set_value(row.doctype, row.name, 'qty', 1);                }
+                    frappe.model.set_value(row.doctype, row.name, 'qty', 1);
+                    frappe.model.set_value(row.doctype, row.name, 'delivery_date', frm.doc.delivery_date);
+                }
                 else {
                     let new_row = frm.add_child('items');
                     frappe.model.set_value(new_row.doctype, new_row.name, 'item_code', item_code);
                     frappe.model.set_value(new_row.doctype, new_row.name, 'item_name', item_name);
                     frappe.model.set_value(new_row.doctype, new_row.name, 'uom', uom);
-                    frappe.model.set_value(new_row.doctype, new_row.name, 'serial_nom', serial_no);
+                    frappe.model.set_value(new_row.doctype, new_row.name, 'serial_no', serial_no);
                     frappe.model.set_value(new_row.doctype, new_row.name, 'expiry_date', expiry_date);
                     frappe.model.set_value(new_row.doctype, new_row.name, 'qty', 1);
+                    frappe.model.set_value(new_row.doctype, new_row.name, 'delivery_date', frm.doc.delivery_date);
                 }
 
                 frm.refresh_field('items');
